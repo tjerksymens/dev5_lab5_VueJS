@@ -1,23 +1,22 @@
 <script setup>
     import { ref, reactive, onMounted } from 'vue'
 
-
     let message = ref("Heyy");
     let allMessages = reactive({
-        data: ["Heyy", "Hoi", "Hallo"],
+        data: [],
     });
 
-    //function to fetch messages from the API
+    // function to fetch messages from the API
     const fetchMessages = async () => {
         try {
             const response = await fetch("https://message-api-withmongo-lzf4.onrender.com/api/v1/messages/");
             const data = await response.json();
-            //acces the messages array in the data object and map over it to get the message
+
+            // Access the messages array in the data object and map over it to get the message
             allMessages.data = data.data[0].messages.map(item => item.message);
         } catch (error) {
             console.log(error);
         }
-        
     };
 
     // function to sendMessage to the API
@@ -33,7 +32,10 @@
                 }),
             });
             const data = await response.json();
-            allMessages.data = data.data[0].messages.map(item => item.message);
+
+            // Update the reactive variable directly
+            allMessages.data.push(message.value);
+            console.log(message.value);
             message.value = "";
         } catch (error) {
             console.log(error);
