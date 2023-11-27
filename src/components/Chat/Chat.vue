@@ -20,10 +20,24 @@
         
     };
 
-    // function sendMessage
-    const sendMessage = () => {
-        allMessages.data.push(message.value);
-        message.value = "";
+    // function to sendMessage to the API
+    const sendMessage = async () => {
+        try {
+            const response = await fetch("https://message-api-withmongo-lzf4.onrender.com/api/v1/messages/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    message: message.value,
+                }),
+            });
+            const data = await response.json();
+            allMessages.data = data.data[0].messages.map(item => item.message);
+            message.value = "";
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     onMounted(() => {
